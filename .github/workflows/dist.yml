@@ -1,0 +1,136 @@
+# Builds the rustup components of an rx-rust release, installs them with
+# rustup on Linux and Windows, and (on request) publishes them:
+#
+# - pull requests and main: the release in TEST_TAG, not published;
+# - Actions > dist > Run workflow: the release you name, published if you
+#   tick "publish". The component tarballs go to a GitHub release of this
+#   repository named after the toolchain, and the channel manifest to the
+#   gh-pages branch, which GitHub Pages serves as the dist server.
+name: dist
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: rx-rust release (toolchain-YYYY-MM-DD)
+        required: true
+      publish:
+        description: Publish the toolchain
+        type: boolean
+        default: false
+
+env:
+  TEST_TAG: toolchain-2026-11-14
+  # The rustc of TEST_TAG is older than rx-rust#184 and does not name the fork
+  # in rustc -V. Remove this once TEST_TAG is newer.
+  TEST_FORK_NAME: ""
+  BASE_URL: https://github.com/${{ github.repository }}/releases/download
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    outputs:
+      toolchain: ${{ steps.build.outputs.toolchain }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: build
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag || env.TEST_TAG }}
+        run: |
+          scripts/build.sh "$TAG" out
+          echo "toolchain=$(cat out/toolchain)" >> "$GITHUB_OUTPUT"
+          # A dist server tree for check-install.sh, served from the runner.
+          scripts/site.sh out http://127.0.0.1:8765/files site
+          mv out/files site/files
+          cp out/toolchain out/rustc-version out/cargo-version site/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: site
+          retention-days: 7
+
+  check:
+    needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, windows-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: site
+      - name: check-install.sh
+        env:
+          FORK_NAME_INPUT: ${{ inputs.tag && 'default' || 'test' }}
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory site > http.log 2>&1 &
+          for i in $(seq 30); do curl -sf -o /dev/null http://127.0.0.1:8765/toolchain && break; sleep 1; done
+          if [ "$FORK_NAME_INPUT" = test ]; then export FORK_NAME="$TEST_FORK_NAME"; fi
+          scripts/check-install.sh http://127.0.0.1:8765 "${{ needs.build.outputs.toolchain }}"
+
+  publish:
+    needs: [build, check]
+    if: github.event_name == 'workflow_dispatch' && inputs.publish
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: site
+      - name: GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TC: ${{ needs.build.outputs.toolchain }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          {
+            echo "The rx-rust toolchain of [$TAG](https://github.com/CDEF-inc/rx-rust/releases/tag/$TAG) as rustup components, for x86-64 Linux and Windows."
+            echo
+            echo "Install it with rustup (see the [README](https://github.com/${{ github.repository }}#readme)):"
+            echo
+            echo '```'
+            echo "RUSTUP_DIST_SERVER=https://cdef-inc.github.io/rx-rust-dist rustup toolchain install $TC"
+            echo '```'
+            echo
+            echo "- **rustc:** $(cat site/rustc-version)"
+            echo "- **cargo:** $(cat site/cargo-version)"
+            echo
+            echo "This is not an official Rust release. It is not made or endorsed by the Rust project."
+            echo
+            echo "SHA-256:"
+            jq -r '"- `\(.file)`: `\(.sha256)`"' site/files/components.jsonl
+          } > notes.md
+          gh release create "$TC" --target "$GITHUB_SHA" --title "$TC (rustup components of $TAG)" \
+            --notes-file notes.md site/files/*.tar.xz site/files/components.jsonl
+      - name: Manifest on gh-pages
+        env:
+          TC: ${{ needs.build.outputs.toolchain }}
+        run: |
+          git fetch origin gh-pages
+          git worktree add pages origin/gh-pages
+          mkdir -p out/files
+          cp site/toolchain site/rustc-version site/cargo-version out/
+          cp site/files/components.jsonl out/files/
+          scripts/site.sh out "$BASE_URL/$TC" pages
+          cd pages
+          git add dist
+          git -c user.name="github-actions[bot]" \
+            -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -m "Add $TC"
+          git push origin HEAD:gh-pages
