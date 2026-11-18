@@ -39,7 +39,7 @@ esac
 
 python3 "$here/split.py" "$linux" x86_64-unknown-linux-gnu "$version" "$out/files" \
   > "$out/files/components.jsonl"
-python3 "$here/split.py" --no-rust-src "$out/in/rx-toolchain-x86_64-windows" \
+python3 "$here/split.py" --host-only "$out/in/rx-toolchain-x86_64-windows" \
   x86_64-pc-windows-msvc "$version" "$out/files" >> "$out/files/components.jsonl"
 rm -rf "$out/in"
 

@@ -1,14 +1,19 @@
 #!/usr/bin/env python3
 """Split an extracted rx-rust toolchain archive into rustup components.
 
-    split.py [--no-rust-src] ROOT HOST VERSION OUTDIR
+    split.py [--host-only] ROOT HOST VERSION OUTDIR
 
 ROOT is the extracted archive (rx-toolchain-x86_64-linux/ or
 rx-toolchain-x86_64-windows/), HOST its host triple. For each component this
 writes OUTDIR/COMPONENT-VERSION-HOST.tar.xz (rust-src: rust-src-VERSION.tar.xz)
 in the rust-installer format that rustup installs, and prints one JSON line:
-{"pkg", "target", "file", "sha256", "files"}. rust-src is the same for every
-host: --no-rust-src leaves it out, for all hosts but one.
+{"pkg", "target", "file", "sha256", "files"}. rust-src and rx-core (rx-none-elf's
+prebuilt core, alloc and compiler_builtins) are the same for every host
+(target "*"): --host-only leaves them out, for all hosts but one.
+
+rx-core is not rust-std for rx-none-elf: rustup's profiles install only the
+host's rust-std, so a user would have to add the target by hand. As a "*"
+component, like rust-src, every profile installs it.
 
 Every file of the archive goes into exactly one component; a file that no rule
 matches is an error, so a new file in the archive is not dropped silently.
@@ -26,6 +31,9 @@ import subprocess
 import sys
 import tarfile
 
+# The components that are the same for every host (target "*").
+SHARED = ("rust-src", "rx-core")
+
 # (component, pattern). The first match wins. Paths are relative to ROOT,
 # with "/" separators. {host} is the host triple.
 RULES = [
@@ -36,6 +44,7 @@ RULES = [
     ("rustc", r"lib/rustlib/{host}/bin/.*"),
     ("rustc", r"lib/rustlib/etc/.*"),
     ("rust-std", r"lib/rustlib/{host}/lib/.*"),
+    ("rx-core", r"lib/rustlib/rx-none-elf/lib/.*"),
     ("cargo", r"bin/cargo(\.exe)?"),
     ("rust-src", r"lib/rustlib/src/.*"),
     ("llvm-tools", r"bin/(llvm-[a-z0-9]+|rx-elf-[a-z0-9]+|ld\.lld)(\.exe)?"),
@@ -67,8 +76,8 @@ def walk(root):
 
 def main():
     args = sys.argv[1:]
-    no_rust_src = args[:1] == ["--no-rust-src"]
-    if no_rust_src:
+    host_only = args[:1] == ["--host-only"]
+    if host_only:
         args = args[1:]
     root, host, version, outdir = args
     rules = [(pkg, re.compile(pat.replace("{host}", re.escape(host)) + r"\Z"))
@@ -96,13 +105,14 @@ def main():
     if unmatched:
         sys.exit("files that no rule puts into a component:\n  " + "\n  ".join(unmatched))
 
-    if no_rust_src:
-        del by_pkg["rust-src"]
+    if host_only:
+        for pkg in SHARED:
+            by_pkg.pop(pkg, None)
     os.makedirs(outdir, exist_ok=True)
     for pkg in sorted(by_pkg):
         name = name_in_tarball(pkg, host)
-        # rust-src is the same for every host (target "*" in the manifest).
-        top = f"{pkg}-{version}" if pkg == "rust-src" else f"{pkg}-{version}-{host}"
+        # rust-src and rx-core are the same for every host (target "*").
+        top = f"{pkg}-{version}" if pkg in SHARED else f"{pkg}-{version}-{host}"
         out = os.path.join(outdir, top + ".tar.xz")
         with open(out, "wb") as f:
             xz = subprocess.Popen(["xz", "-T0", "-6", "-c"], stdin=subprocess.PIPE, stdout=f)
@@ -144,7 +154,7 @@ def main():
         with open(out, "rb") as f:
             for chunk in iter(lambda: f.read(1 << 20), b""):
                 h.update(chunk)
-        target = "*" if pkg == "rust-src" else host
+        target = "*" if pkg in SHARED else host
         print(json.dumps({"pkg": pkg, "target": target, "file": os.path.basename(out),
                           "sha256": h.hexdigest(), "files": len(by_pkg[pkg])}))
 
