@@ -33,11 +33,19 @@ Remove-Item Env:RUSTUP_DIST_SERVER
 
 ## Build for RX
 
-The RX target has no prebuilt standard library: cargo builds `core` (and `alloc`) from the `rust-src` component. Unstable options such as `-Zbuild-std` need `RUSTC_BOOTSTRAP=1`, because the toolchain is on the stable channel:
+From `1.100.0-2026-11-18` on, the toolchain has a prebuilt `core`, `alloc` and `compiler_builtins` for `rx-none-elf` (the `rx-core` component, in every profile). They are built for RXv1, so they run on every RX core; your crate's own code follows its `target-cpu`. Inline assembly (`asm!`), c-variadic definitions and the RX target features (`fpu`, `dfpu`, `rxv2`, `rxv3`, `rxv3e`, `flush-denormals`, `relax`) are stable in this toolchain. A plain build works, with no `RUSTC_BOOTSTRAP`:
 
 ```bash
-RUSTC_BOOTSTRAP=1 cargo +1.100.0-2026-11-17 build --release --target rx-none-elf -Zbuild-std=core
+cargo +1.100.0-2026-11-18 build --release --target rx-none-elf
 ```
+
+To build `core` from source for your `target-cpu` instead, use `-Zbuild-std`. It is unstable, so on this stable-channel toolchain it needs `RUSTC_BOOTSTRAP=1`:
+
+```bash
+RUSTC_BOOTSTRAP=1 cargo +1.100.0-2026-11-18 build --release --target rx-none-elf -Zbuild-std=core
+```
+
+Older toolchains (up to `1.100.0-2026-11-17`) have no prebuilt `core`: they need `-Zbuild-std` and `RUSTC_BOOTSTRAP=1`, and `#![feature(asm_experimental_arch)]` for `asm!`.
 
 rx-rust's README covers the rest: linker scripts, start-up code, the calling conventions, QEMU and the boards.
 
@@ -55,6 +63,7 @@ The toolchains and their components are in [Releases](https://github.com/CDEF-in
 |---|---|---|
 | `rustc` | rustc, rust-lld, rust-lldb and rustc's LLDB formatters | minimal |
 | `rust-std` | the host's standard library, for build scripts and proc macros | minimal |
+| `rx-core` | `rx-none-elf`'s prebuilt `core`, `alloc` and `compiler_builtins` (RXv1 code; from `1.100.0-2026-11-18`) | minimal |
 | `cargo` | cargo | minimal |
 | `rust-src` | the library sources, for `-Zbuild-std` | minimal |
 | `llvm-tools` | `ld.lld`, `llvm-objdump`, `llvm-objcopy`, `llvm-nm`, ... and the same as `rx-elf-*` | default |
@@ -70,7 +79,7 @@ The commits the toolchain was built from (`VERSIONS`) and its SBOMs are in `shar
 [`dist.yml`](.github/workflows/dist.yml) does not build the compiler: it takes the archives of an [rx-rust release](https://github.com/CDEF-inc/rx-rust/releases), which rx-rust's CI built and tested.
 
 1. `scripts/build.sh` splits each archive into the components (`scripts/split.py`), in the format rustup installs. Every file of the archive goes into one component.
-2. `scripts/check-install.sh` installs the toolchain with rustup from a local server, on Linux and Windows. It checks `rustc -V`, builds a `no_std` crate for `rx-none-elf` with `-Zbuild-std=core`, links it with `ld.lld`, and starts `qemu-system-rx` and `lldb`.
+2. `scripts/check-install.sh` installs the toolchain with rustup from a local server, on Linux and Windows. It checks `rustc -V`, builds a `no_std` crate for `rx-none-elf` without `RUSTC_BOOTSTRAP` on the prebuilt `core` and again with `-Zbuild-std=core`, links it with `ld.lld`, and starts `qemu-system-rx` and `lldb`.
 3. When publishing, the tarballs go to a release of this repository named after the toolchain. The channel manifest (`dist/DATE/channel-rust-VERSION.toml`) goes to the `gh-pages` branch, which GitHub Pages serves.
 
 To publish an rx-rust release: Actions > dist > Run workflow, with the release's tag and "publish" ticked.
