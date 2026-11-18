@@ -1,0 +1,177 @@
+manifest-version = "2"
+date = "2026-11-18"
+
+[pkg.cargo]
+version = "1.99.0 (5f94df478 2026-08-27)"
+
+[pkg.cargo.target."x86_64-pc-windows-msvc"]
+available = true
+xz_url = "https://github.com/CDEF-inc/rx-rust-dist/releases/download/1.100.0-2026-11-18/cargo-1.100.0-x86_64-pc-windows-msvc.tar.xz"
+xz_hash = "350946cadb6298f2aebe5f994b3a26d69b73d234a2b4d0eaed52230a1e786477"
+
+[pkg.cargo.target."x86_64-unknown-linux-gnu"]
+available = true
+xz_url = "https://github.com/CDEF-inc/rx-rust-dist/releases/download/1.100.0-2026-11-18/cargo-1.100.0-x86_64-unknown-linux-gnu.tar.xz"
+xz_hash = "811c80a8eb05c1fa41461b03a3361b355a12fa2c9773550bab0180d42ee70034"
+
+[pkg.llvm-tools]
+version = "1.100.0 (c8a526039 2026-11-18) (CDEF-inc RX fork)"
+
+[pkg.llvm-tools.target."x86_64-pc-windows-msvc"]
+available = true
+xz_url = "https://github.com/CDEF-inc/rx-rust-dist/releases/download/1.100.0-2026-11-18/llvm-tools-1.100.0-x86_64-pc-windows-msvc.tar.xz"
+xz_hash = "1283f4f9a16a8bc10f1b8c1b60e4a29a3d9e4fc5d2194110901f6060ea1285a5"
+
+[pkg.llvm-tools.target."x86_64-unknown-linux-gnu"]
+available = true
+xz_url = "https://github.com/CDEF-inc/rx-rust-dist/releases/download/1.100.0-2026-11-18/llvm-tools-1.100.0-x86_64-unknown-linux-gnu.tar.xz"
+xz_hash = "84212d81666854e4915001daae50df5faaffe2bef0f57dae19b2e5a280851945"
+
+[pkg.rust-src]
+version = "1.100.0 (c8a526039 2026-11-18) (CDEF-inc RX fork)"
+
+[pkg.rust-src.target."*"]
+available = true
+xz_url = "https://github.com/CDEF-inc/rx-rust-dist/releases/download/1.100.0-2026-11-18/rust-src-1.100.0.tar.xz"
+xz_hash = "d146e2172e72661fb3c8ba4d908515b728ecc0794a3ca86ef2d8c44fd0e60ffa"
+
+[pkg.rust-std]
+version = "1.100.0 (c8a526039 2026-11-18) (CDEF-inc RX fork)"
+
+[pkg.rust-std.target."x86_64-pc-windows-msvc"]
+available = true
+xz_url = "https://github.com/CDEF-inc/rx-rust-dist/releases/download/1.100.0-2026-11-18/rust-std-1.100.0-x86_64-pc-windows-msvc.tar.xz"
+xz_hash = "0024e1c589ff65e442370301427d01b852c53a98484b7bc12f0bb52bdd124894"
+
+[pkg.rust-std.target."x86_64-unknown-linux-gnu"]
+available = true
+xz_url = "https://github.com/CDEF-inc/rx-rust-dist/releases/download/1.100.0-2026-11-18/rust-std-1.100.0-x86_64-unknown-linux-gnu.tar.xz"
+xz_hash = "b4c523dfde8404cf7abcec8a38442eaf3ad0c92973ad32ef128eae0ff1079c4a"
+
+[pkg.rustc]
+version = "1.100.0 (c8a526039 2026-11-18) (CDEF-inc RX fork)"
+
+[pkg.rustc.target."x86_64-pc-windows-msvc"]
+available = true
+xz_url = "https://github.com/CDEF-inc/rx-rust-dist/releases/download/1.100.0-2026-11-18/rustc-1.100.0-x86_64-pc-windows-msvc.tar.xz"
+xz_hash = "5ad47ac135217a3f2c8276533337986faa791c8095a76dc4b7f70706964d35f2"
+
+[pkg.rustc.target."x86_64-unknown-linux-gnu"]
+available = true
+xz_url = "https://github.com/CDEF-inc/rx-rust-dist/releases/download/1.100.0-2026-11-18/rustc-1.100.0-x86_64-unknown-linux-gnu.tar.xz"
+xz_hash = "fdc9f2e76a930b4ec48ea0b4555aa5fc668923d921c44b9cf61352baf4049f7d"
+
+[pkg.rx-core]
+version = "1.100.0 (c8a526039 2026-11-18) (CDEF-inc RX fork)"
+
+[pkg.rx-core.target."*"]
+available = true
+xz_url = "https://github.com/CDEF-inc/rx-rust-dist/releases/download/1.100.0-2026-11-18/rx-core-1.100.0.tar.xz"
+xz_hash = "b718893e950f12caebebcf7e8dd8bb655c9a47666c6fa5d3728f01052e71f1d7"
+
+[pkg.rx-lldb]
+version = "1.100.0 (c8a526039 2026-11-18) (CDEF-inc RX fork)"
+
+[pkg.rx-lldb.target."x86_64-pc-windows-msvc"]
+available = true
+xz_url = "https://github.com/CDEF-inc/rx-rust-dist/releases/download/1.100.0-2026-11-18/rx-lldb-1.100.0-x86_64-pc-windows-msvc.tar.xz"
+xz_hash = "6cda75acdf773443c8fcda2dade76e7f765e4516810199ce4210538d2b3bb4dc"
+
+[pkg.rx-lldb.target."x86_64-unknown-linux-gnu"]
+available = true
+xz_url = "https://github.com/CDEF-inc/rx-rust-dist/releases/download/1.100.0-2026-11-18/rx-lldb-1.100.0-x86_64-unknown-linux-gnu.tar.xz"
+xz_hash = "ad6eb8941c28ab96093019908a47cc337e6a6121f81128b9d0a23461f64960f9"
+
+[pkg.rx-qemu]
+version = "1.100.0 (c8a526039 2026-11-18) (CDEF-inc RX fork)"
+
+[pkg.rx-qemu.target."x86_64-pc-windows-msvc"]
+available = true
+xz_url = "https://github.com/CDEF-inc/rx-rust-dist/releases/download/1.100.0-2026-11-18/rx-qemu-1.100.0-x86_64-pc-windows-msvc.tar.xz"
+xz_hash = "74bf22293d0525a00490885d17adb6b43a0ba3edf778be4259d85afc8da5136d"
+
+[pkg.rx-qemu.target."x86_64-unknown-linux-gnu"]
+available = true
+xz_url = "https://github.com/CDEF-inc/rx-rust-dist/releases/download/1.100.0-2026-11-18/rx-qemu-1.100.0-x86_64-unknown-linux-gnu.tar.xz"
+xz_hash = "a3d6c960e7f0ba7d2e2516dd08c89915b691cbfed585a3b7522fbbbd4b3163d7"
+
+[pkg.rust]
+version = "1.100.0 (c8a526039 2026-11-18) (CDEF-inc RX fork)"
+
+[pkg.rust.target."x86_64-pc-windows-msvc"]
+available = true
+
+[[pkg.rust.target."x86_64-pc-windows-msvc".components]]
+pkg = "rustc"
+target = "x86_64-pc-windows-msvc"
+
+[[pkg.rust.target."x86_64-pc-windows-msvc".components]]
+pkg = "rust-std"
+target = "x86_64-pc-windows-msvc"
+
+[[pkg.rust.target."x86_64-pc-windows-msvc".components]]
+pkg = "cargo"
+target = "x86_64-pc-windows-msvc"
+
+[[pkg.rust.target."x86_64-pc-windows-msvc".components]]
+pkg = "rust-src"
+target = "*"
+
+[[pkg.rust.target."x86_64-pc-windows-msvc".components]]
+pkg = "rx-core"
+target = "*"
+
+[[pkg.rust.target."x86_64-pc-windows-msvc".extensions]]
+pkg = "llvm-tools"
+target = "x86_64-pc-windows-msvc"
+
+[[pkg.rust.target."x86_64-pc-windows-msvc".extensions]]
+pkg = "rx-qemu"
+target = "x86_64-pc-windows-msvc"
+
+[[pkg.rust.target."x86_64-pc-windows-msvc".extensions]]
+pkg = "rx-lldb"
+target = "x86_64-pc-windows-msvc"
+
+[pkg.rust.target."x86_64-unknown-linux-gnu"]
+available = true
+
+[[pkg.rust.target."x86_64-unknown-linux-gnu".components]]
+pkg = "rustc"
+target = "x86_64-unknown-linux-gnu"
+
+[[pkg.rust.target."x86_64-unknown-linux-gnu".components]]
+pkg = "rust-std"
+target = "x86_64-unknown-linux-gnu"
+
+[[pkg.rust.target."x86_64-unknown-linux-gnu".components]]
+pkg = "cargo"
+target = "x86_64-unknown-linux-gnu"
+
+[[pkg.rust.target."x86_64-unknown-linux-gnu".components]]
+pkg = "rust-src"
+target = "*"
+
+[[pkg.rust.target."x86_64-unknown-linux-gnu".components]]
+pkg = "rx-core"
+target = "*"
+
+[[pkg.rust.target."x86_64-unknown-linux-gnu".extensions]]
+pkg = "llvm-tools"
+target = "x86_64-unknown-linux-gnu"
+
+[[pkg.rust.target."x86_64-unknown-linux-gnu".extensions]]
+pkg = "rx-qemu"
+target = "x86_64-unknown-linux-gnu"
+
+[[pkg.rust.target."x86_64-unknown-linux-gnu".extensions]]
+pkg = "rx-lldb"
+target = "x86_64-unknown-linux-gnu"
+
+[profiles]
+minimal = ["rustc", "rust-std", "cargo", "rust-src", "rx-core"]
+default = ["rustc", "rust-std", "cargo", "rust-src", "rx-core", "llvm-tools", "rx-qemu", "rx-lldb"]
+complete = ["rustc", "rust-std", "cargo", "rust-src", "rx-core", "llvm-tools", "rx-qemu", "rx-lldb"]
+
+[renames.llvm-tools-preview]
+to = "llvm-tools"
