@@ -9,27 +9,27 @@ A rustup dist server for the [rx-rust](https://github.com/CDEF-inc/rx-rust) tool
 Set `RUSTUP_DIST_SERVER` for the install only, and name the toolchain with its date (the list is in [Toolchains](#toolchains)):
 
 ```bash
-RUSTUP_DIST_SERVER=https://cdef-inc.github.io/rx-rust-dist rustup toolchain install 1.100.0-2026-11-17
+RUSTUP_DIST_SERVER=https://cdef-inc.github.io/rx-rust-dist rustup toolchain install 1.100.0-2026-11-18
 ```
 
 In PowerShell:
 
 ```powershell
 $env:RUSTUP_DIST_SERVER = "https://cdef-inc.github.io/rx-rust-dist"
-rustup toolchain install 1.100.0-2026-11-17
+rustup toolchain install 1.100.0-2026-11-18
 Remove-Item Env:RUSTUP_DIST_SERVER
 ```
 
 - Do not set `RUSTUP_DIST_SERVER` for good. While it is set, rustup looks for official toolchains (`rustup update stable`) on this server too, and fails.
-- Using the toolchain does not need the variable: `cargo +1.100.0-2026-11-17 build`, or a `rust-toolchain.toml`:
+- Using the toolchain does not need the variable: `cargo +1.100.0-2026-11-18 build`, or a `rust-toolchain.toml`:
 
   ```toml
   [toolchain]
-  channel = "1.100.0-2026-11-17"
+  channel = "1.100.0-2026-11-18"
   ```
 
   If the toolchain is not installed, rustup tries to fetch it from the official server, where it does not exist: the build stops with an error, and you install it as above.
-- To remove it: `rustup toolchain uninstall 1.100.0-2026-11-17`.
+- To remove it: `rustup toolchain uninstall 1.100.0-2026-11-18`.
 
 ## Build for RX
 
@@ -51,9 +51,9 @@ rx-rust's README covers the rest: linker scripts, start-up code, the calling con
 
 ## Toolchains
 
-A toolchain is named after the Rust release that rustc is based on and the date of the rx-rust release: `1.100.0-2026-11-17` is rx-rust's [toolchain-2026-11-17](https://github.com/CDEF-inc/rx-rust/releases/tag/toolchain-2026-11-17), based on Rust 1.100.0. rustup does not allow other names, and the official server has no toolchain of that name: an official `1.100.0` is dated the day it came out.
+A toolchain is named after the Rust release that rustc is based on and the date of the rx-rust release: `1.100.0-2026-11-18` is rx-rust's [toolchain-2026-11-18](https://github.com/CDEF-inc/rx-rust/releases/tag/toolchain-2026-11-18), based on Rust 1.100.0. rustup does not allow other names, and the official server has no toolchain of that name: an official `1.100.0` is dated the day it came out.
 
-`rustc -V` says which one you have: `rustc 1.100.0 (b216d1858 2026-11-14) (CDEF-inc RX fork)`.
+`rustc -V` says which one you have: `rustc 1.100.0 (c8a526039 2026-11-18) (CDEF-inc RX fork)`.
 
 The toolchains and their components are in [Releases](https://github.com/CDEF-inc/rx-rust-dist/releases).
 
