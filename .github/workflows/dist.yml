@@ -72,8 +72,9 @@ jobs:
       - name: check-install.sh
         env:
           # TEST_TAG has rx-core, so the build on the prebuilt core must run.
-          # A release named in Run workflow may be older and have none.
-          PREBUILT_STD: ${{ inputs.tag && '' || '1' }}
+          # A release named in Run workflow may be older and have none. (Not
+          # `inputs.tag && '' || '1'`: '' is falsy, so that is always '1'.)
+          PREBUILT_STD: ${{ !inputs.tag && '1' || '' }}
         run: |
           python3 -m http.server 8765 --bind 127.0.0.1 --directory site > http.log 2>&1 &
           for i in $(seq 30); do curl -sf -o /dev/null http://127.0.0.1:8765/toolchain && break; sleep 1; done
