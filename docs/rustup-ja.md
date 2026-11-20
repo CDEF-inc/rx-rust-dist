@@ -84,8 +84,9 @@ edition = "2024"
 [dependencies]
 # rx-rust リポジトリのクレート。rev を固定する。
 rx-rt = { git = "https://github.com/CDEF-inc/rx-rust", rev = "<commit>" }
-# ボード用 HAL を使う場合（PAC を含む）:
-# rx72-hal = { git = "https://github.com/CDEF-inc/rx-rust", rev = "<commit>" }
+# ボード用 HAL を使う場合（PAC を含む）。チップの feature を一つだけ選ぶ:
+# rx72-hal は rx72m / rx72n、rx74-hal は rx74m / rx74n。
+# rx72-hal = { git = "https://github.com/CDEF-inc/rx-rust", rev = "<commit>", features = ["rx72m"] }
 
 [[bin]]
 name = "my-app"
@@ -98,7 +99,8 @@ debug = true
 ```
 
 - **git 依存:** rx-rust が非公開のリポジトリなら、cargo がそのリポジトリを取得できる認証が要る（`net.git-fetch-with-cli = true` で git の認証を使うなど）。
-- **HAL:** HAL の PAC は e² studio の `.sfrx` ファイルから生成する（`docs/NOTES-hal.md`）。PAC にデバッグ情報を付けるとビルドに 10 分以上かかるので、`examples/blinky/Cargo.toml` のように `[profile.*.package.rx72-pac] debug = false` を付ける。
+- **HAL:** HAL の PAC は e² studio の `.sfrx` ファイルから生成する（`docs/NOTES-hal.md`）。PAC にデバッグ情報を付けるとビルドに 10 分以上かかるので、`examples/blinky/Cargo.toml` のように `[profile.*.package.rx72-pac] debug = false` を付ける（RX74 なら `rx74-pac`）。
+- **クレート名:** 実際の名前は `rx72-hal` / `rx72-pac` と `rx74-hal` / `rx74-pac`。`rx72m-hal` のようにチップ名を付けた名前のクレートはない。チップは feature で選ぶ。
 
 ### `build.rs`
 
