@@ -47,7 +47,7 @@ RUSTC_BOOTSTRAP=1 cargo +1.100.0-2026-11-18 build --release --target rx-none-elf
 
 Older toolchains (up to `1.100.0-2026-11-17`) have no prebuilt `core`: they need `-Zbuild-std` and `RUSTC_BOOTSTRAP=1`, and `#![feature(asm_experimental_arch)]` for `asm!`.
 
-rx-rust's README covers the rest: linker scripts, start-up code, the calling conventions, QEMU and the boards.
+rx-rust's README covers the rest: linker scripts, start-up code, the calling conventions, QEMU and the boards. [docs/rustup-ja.md](docs/rustup-ja.md) (in Japanese) walks through a new project with this toolchain, from the install to the build and the bundled tools.
 
 ## Toolchains
 
