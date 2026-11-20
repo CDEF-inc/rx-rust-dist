@@ -72,7 +72,7 @@ The toolchains and their components are in [Releases](https://github.com/CDEF-in
 
 `rustup toolchain install` installs the default profile. `--profile minimal` leaves out the last three, and `rustup component add rx-qemu --toolchain ...` adds one later.
 
-The commits the toolchain was built from (`VERSIONS`) and its SBOMs are in `share/doc/rx-toolchain/` of the toolchain (`rustc --print sysroot`).
+The commits the toolchain was built from (`VERSIONS`) and its SBOMs are in `share/doc/rx-toolchain/` of the toolchain (`rustc --print sysroot`). So are the licenses, from toolchain releases after 2026-11-18: the Rust project's (`COPYRIGHT`, `LICENSE-APACHE`, `LICENSE-MIT`) and llvm-project's (`LICENSE.TXT`) with `rustc`, QEMU's GPL-2.0 (`COPYING.QEMU`) with `rx-qemu`.
 
 ## How it is made
 
