@@ -38,6 +38,11 @@ SHARED = ("rust-src", "rx-core")
 # with "/" separators. {host} is the host triple.
 RULES = [
     ("rustc", r"(VERSIONS|SBOM\.spdx\.json|SBOM\.cdx\.json)"),
+    # The licenses (rx-rust's dist-toolchain*.sh, from toolchain releases
+    # after 2026-11-18): the Rust project's and llvm-project's with rustc
+    # (which has rust-lld and LLVM in it), QEMU's GPL-2.0 with qemu-system-rx.
+    ("rustc", r"(COPYRIGHT|LICENSE-APACHE|LICENSE-MIT|LICENSE\.TXT)"),
+    ("rx-qemu", r"COPYING\.QEMU"),
     ("rustc", r"bin/(rustc|rust-lldb)(\.exe)?"),
     ("rustc", r"bin/rustc_driver-[0-9a-f]+\.dll"),
     ("rustc", r"lib/librustc_driver-[0-9a-f]+\.so"),
